@@ -36,6 +36,11 @@ public class Handler {
         objects.removeIf(object -> object.getId() == ID.Enemy);
     }
 
+    public void clearMenuParticles(){
+        objects.removeIf(object -> object.getId() == ID.MenuParticle);
+        objects.removeIf(object -> object.getId() == ID.Trail);
+    }
+
     public LinkedList<GameObject> getObjects() {
         return objects;
     }

@@ -48,7 +48,7 @@ public class Spawn {
                 handler.addObject(new BossEnemy((Game.WIDTH/2)-48,-100,ID.Enemy,handler));
             }
 
-            
+
         }
     }
 }

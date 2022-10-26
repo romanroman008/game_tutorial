@@ -1,5 +1,6 @@
 package com.tutorial.main;
 
+import com.tutorial.main.objects.MenuParticle;
 import com.tutorial.main.objects.Player;
 
 import java.awt.*;
@@ -18,26 +19,44 @@ public class Game extends Canvas implements Runnable {
     private Handler handler;
     private HUD hud;
     private Spawn spawn;
+    private Menu menu;
 
+
+
+    public enum STATE{
+        Menu,
+        Game,
+        Help,
+        End
+    }
+
+    public STATE gameState = STATE.Help;
 
     public Game() {
+
         handler = new Handler();
+        menu=new Menu(this,handler);
         this.addKeyListener(new KeyInput(handler));
+        this.addMouseListener(menu);
 
         new Window(WIDTH, HEIGHT, "Let's build a game", this);
         hud = new HUD();
 
         spawn=new Spawn(handler,hud);
+
         r= new Random();
 
-        handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32,ID.Player,handler));
-//        for (int i = 0; i < 5; i++) {
-//            handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT),ID.Enemy,handler));
-//        }
 
+        if(gameState==STATE.Game){
+            handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32,ID.Player,handler));
+            handler.clearMenuParticles();
+        }
 
-
-
+        else{
+            for (int i = 0; i < 20; i++) {
+                handler.addObject(new MenuParticle(r.nextInt(WIDTH-50),r.nextInt(HEIGHT-50),ID.MenuParticle,handler));
+            }
+        }
     }
 
     public synchronized void start() {
@@ -85,8 +104,13 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         handler.tick();
-        hud.tick();
-        spawn.tick();
+        if(gameState==STATE.Game){
+            hud.tick();
+            spawn.tick();
+        }else if(gameState==STATE.Menu){
+            menu.tick();
+        }
+
     }
 
     private void render() {
@@ -99,10 +123,14 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
         g.setColor(Color.black);
         g.fillRect(0, 0, WIDTH, HEIGHT);
-
         handler.render(g);
+        if(gameState==STATE.Game){
 
-        hud.render(g);
+            hud.render(g);
+        }else if(gameState==STATE.Menu||gameState==STATE.Help){
+            menu.render(g);
+        }
+
 
         g.dispose();
         bs.show();
