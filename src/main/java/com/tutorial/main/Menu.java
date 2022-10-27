@@ -38,7 +38,9 @@ public class Menu extends MouseAdapter {
 
             //help
             if (mouseOver(mx, my, 220, 220, 200, 60)) {
+
                 game.gameState = Game.STATE.Help;
+
             }
 
             //quit
@@ -72,8 +74,11 @@ public class Menu extends MouseAdapter {
 
     private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
         if (mx > x && mx < x + width)
-            if (my > y && my < y + height)
+            if (my > y && my < y + height){
+                AudioPlayer.getSoundMap("click_sound").play();
                 return true;
+            }
+
         return false;
 
     }

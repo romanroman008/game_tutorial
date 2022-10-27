@@ -3,8 +3,11 @@ package com.tutorial.main;
 import com.tutorial.main.objects.MenuParticle;
 import com.tutorial.main.objects.Player;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.util.Random;
 
 public class Game extends Canvas implements Runnable {
@@ -32,13 +35,17 @@ public class Game extends Canvas implements Runnable {
 
     public STATE gameState = STATE.Menu;
 
-    public Game() {
+    public Game(){
 
         handler = new Handler();
         hud = new HUD();
         menu=new Menu(this,handler,hud);
         this.addKeyListener(new KeyInput(handler));
         this.addMouseListener(menu);
+
+        AudioPlayer.load();
+
+        AudioPlayer.getMusicMap("theme_song").loop();
 
         new Window(WIDTH, HEIGHT, "Let's build a game", this);
 
@@ -157,7 +164,7 @@ public class Game extends Canvas implements Runnable {
         return var;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         new Game();
     }
 
