@@ -35,6 +35,12 @@ public class Handler {
     public void clearEnemies(){
         objects.removeIf(object -> object.getId() == ID.Enemy);
     }
+    public void removePlayer(){
+        objects.removeIf(object->object.getId()==ID.Player);
+    }
+    public void removeAll(){
+        objects.removeAll(objects);
+    }
 
     public void clearMenuParticles(){
         objects.removeIf(object -> object.getId() == ID.MenuParticle);

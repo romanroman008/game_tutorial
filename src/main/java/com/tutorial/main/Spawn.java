@@ -51,6 +51,10 @@ public class Spawn {
 
         }
     }
+
+    public void resetScore(){
+        this.scoreKeep=0;
+    }
 }
 
 

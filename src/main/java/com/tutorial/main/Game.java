@@ -30,17 +30,18 @@ public class Game extends Canvas implements Runnable {
         End
     }
 
-    public STATE gameState = STATE.Help;
+    public STATE gameState = STATE.Menu;
 
     public Game() {
 
         handler = new Handler();
-        menu=new Menu(this,handler);
+        hud = new HUD();
+        menu=new Menu(this,handler,hud);
         this.addKeyListener(new KeyInput(handler));
         this.addMouseListener(menu);
 
         new Window(WIDTH, HEIGHT, "Let's build a game", this);
-        hud = new HUD();
+
 
         spawn=new Spawn(handler,hud);
 
@@ -48,8 +49,9 @@ public class Game extends Canvas implements Runnable {
 
 
         if(gameState==STATE.Game){
-            handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32,ID.Player,handler));
-            handler.clearMenuParticles();
+//            handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32,ID.Player,handler));
+//            hud.resetScoreLevelAndHealth();
+//            handler.clearMenuParticles();
         }
 
         else{
@@ -107,10 +109,22 @@ public class Game extends Canvas implements Runnable {
         if(gameState==STATE.Game){
             hud.tick();
             spawn.tick();
+            if(HUD.HEALTH==0){
+                endGame();
+            }
+
         }else if(gameState==STATE.Menu){
             menu.tick();
         }
 
+    }
+    private void endGame(){
+        gameState=STATE.End;
+        handler.removePlayer();
+        spawn.resetScore();
+//        for (int i = 0; i < 20; i++) {
+//            handler.addObject(new MenuParticle(r.nextInt(WIDTH-50),r.nextInt(HEIGHT-50),ID.MenuParticle,handler));
+//        }
     }
 
     private void render() {
@@ -127,7 +141,7 @@ public class Game extends Canvas implements Runnable {
         if(gameState==STATE.Game){
 
             hud.render(g);
-        }else if(gameState==STATE.Menu||gameState==STATE.Help){
+        }else if(gameState==STATE.Menu||gameState==STATE.Help||gameState==STATE.End){
             menu.render(g);
         }
 

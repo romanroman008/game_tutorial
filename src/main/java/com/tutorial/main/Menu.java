@@ -1,10 +1,12 @@
 package com.tutorial.main;
 
+import com.tutorial.main.objects.MenuParticle;
 import com.tutorial.main.objects.Player;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 import static com.tutorial.main.Game.HEIGHT;
 import static com.tutorial.main.Game.WIDTH;
@@ -12,10 +14,13 @@ import static com.tutorial.main.Game.WIDTH;
 public class Menu extends MouseAdapter {
     Game game;
     Handler handler;
+    HUD hud;
+    Random r=new Random();
 
-    public Menu(Game game, Handler handler) {
+    public Menu(Game game, Handler handler,HUD hud) {
         this.game = game;
         this.handler = handler;
+        this.hud=hud;
     }
 
     public void mousePressed(MouseEvent e) {
@@ -28,6 +33,7 @@ public class Menu extends MouseAdapter {
                 game.gameState = Game.STATE.Game;
                 handler.clearMenuParticles();
                 handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
+            hud.resetScoreLevelAndHealth();
             }
 
             //help
@@ -46,6 +52,17 @@ public class Menu extends MouseAdapter {
                 game.gameState = Game.STATE.Menu;
             }
         }
+
+        if(game.gameState== Game.STATE.End)
+
+            if(mouseOver(mx,my,220, 320, 200, 60)){
+                for (int i = 0; i < 20; i++) {
+                    handler.addObject(new MenuParticle(r.nextInt(WIDTH-50),r.nextInt(HEIGHT-50),ID.MenuParticle,handler));
+                }
+                game.gameState= Game.STATE.Menu;
+                handler.clearEnemies();
+            }
+
 
     }
 
@@ -99,6 +116,20 @@ public class Menu extends MouseAdapter {
             g.setFont(font2);
             g.setColor(Color.white);
             g.drawString("Back", 290, 360);
+            g.drawRect(220, 320, 200, 60);
+        }
+
+        else if (game.gameState == Game.STATE.End) {
+
+
+            g.setFont(font3);
+            g.setColor(Color.white);
+            g.drawString("They've got you this time", 200, 200);
+            g.drawString("Your score: " + hud.getScore(), 245, 260);
+
+            g.setFont(font2);
+            g.setColor(Color.white);
+            g.drawString("Try again", 250, 360);
             g.drawRect(220, 320, 200, 60);
         }
 
