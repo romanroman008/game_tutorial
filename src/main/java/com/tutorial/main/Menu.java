@@ -1,7 +1,9 @@
 package com.tutorial.main;
 
+import com.tutorial.main.objects.GameObject;
 import com.tutorial.main.objects.MenuParticle;
 import com.tutorial.main.objects.Player;
+import com.tutorial.main.objects.enemies.Missile;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -16,6 +18,7 @@ public class Menu extends MouseAdapter {
     Handler handler;
     HUD hud;
     Random r=new Random();
+    GameObject player;
 
     public Menu(Game game, Handler handler,HUD hud) {
         this.game = game;
@@ -26,6 +29,7 @@ public class Menu extends MouseAdapter {
     public void mousePressed(MouseEvent e) {
         int mx = e.getX();
         int my = e.getY();
+
 
         if (game.gameState == Game.STATE.Menu) {
             //play
@@ -89,8 +93,25 @@ public class Menu extends MouseAdapter {
                 game.gameState = Game.STATE.Menu;
             }
         }
+        else if (game.gameState == Game.STATE.Game) {
+            if (player == null) {
+                player = handler.objects.stream()
+                        .filter(p -> p.getId().equals(ID.Player))
+                        .findAny()
+                        .orElse(null);
+            }
+            float diffX = (player.getX()+16) - mx;
+            float diffY = (player.getY()+16) - my;
+            shootMissile(diffX, diffY);
+        }
 
 
+    }
+    private void shootMissile(float diffX, float diffY) {
+        float distance = (float) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+        float velX = ((-1 / distance) * diffX) * 10;
+        float velY = ((-1 / distance) * diffY) * 10;
+        handler.addObject(new Missile(player.getX()+16, player.getY()+16, ID.PlayerMissile, velX, velY, handler));
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -180,5 +201,9 @@ public class Menu extends MouseAdapter {
 
 
         }
+    }
+
+    public void removePlayer(){
+        this.player=null;
     }
 }

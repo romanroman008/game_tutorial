@@ -43,7 +43,9 @@ public class Game extends Canvas implements Runnable {
         hud = new HUD();
         menu=new Menu(this,handler,hud);
         this.addKeyListener(new KeyInput(handler,this));
+        //this.addMouseListener(new MouseInput(this,handler));
         this.addMouseListener(menu);
+
 
         AudioPlayer.load();
 
@@ -58,7 +60,8 @@ public class Game extends Canvas implements Runnable {
 
 
         if(gameState==STATE.Game){
-//            handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32,ID.Player,handler));
+            handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32,ID.Player,handler));
+
 //            hud.resetScoreLevelAndHealth();
 //            handler.clearMenuParticles();
         }
@@ -137,6 +140,7 @@ public class Game extends Canvas implements Runnable {
         gameState=STATE.End;
         handler.removePlayer();
         spawn.resetScore();
+        menu.removePlayer();
 //        for (int i = 0; i < 20; i++) {
 //            handler.addObject(new MenuParticle(r.nextInt(WIDTH-50),r.nextInt(HEIGHT-50),ID.MenuParticle,handler));
 //        }

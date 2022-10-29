@@ -25,6 +25,16 @@ public class BossEnemy extends GameObject {
         velY=2;
 
     }
+    private boolean collision(){
+        for (GameObject object : handler.getObjects()) {
+            if(object.getId()==ID.PlayerMissile){
+                if(getBounds().intersects(object.getBounds())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     @Override
     public Rectangle getBounds() {
         return new Rectangle((int)x,(int)y,96,96);
@@ -38,6 +48,8 @@ public class BossEnemy extends GameObject {
 //        if(y<=0||y>= Game.HEIGHT-50)
 //            velY*=-1;
 
+        if(collision())
+            this.handler.removeObject(this);
 
         if(timer==0)
         {

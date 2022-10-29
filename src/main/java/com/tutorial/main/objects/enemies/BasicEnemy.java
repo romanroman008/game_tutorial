@@ -23,10 +23,23 @@ public class BasicEnemy extends GameObject {
         return new Rectangle((int)x,(int)y,16,16);
     }
 
+    private boolean collision(){
+        for (GameObject object : handler.getObjects()) {
+            if(object.getId()==ID.PlayerMissile){
+                if(getBounds().intersects(object.getBounds())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public void tick() {
         x+=velX;
         y+=velY;
+        if(collision())
+            this.handler.removeObject(this);
 
         if(y<=0||y>= Game.HEIGHT-50)
             velY*=-1;

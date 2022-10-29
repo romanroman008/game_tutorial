@@ -4,6 +4,7 @@ import com.tutorial.main.objects.GameObject;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 
 public class KeyInput extends KeyAdapter {
     private Handler handler;
