@@ -8,9 +8,11 @@ import java.awt.event.KeyEvent;
 public class KeyInput extends KeyAdapter {
     private Handler handler;
     private boolean[] keyDown=new boolean[4];
+    private Game game;
 
-    public KeyInput(Handler handler) {
+    public KeyInput(Handler handler,Game game) {
         this.handler = handler;
+        this.game=game;
         this.keyDown[0]=false;
         this.keyDown[1]=false;
         this.keyDown[2]=false;
@@ -19,29 +21,41 @@ public class KeyInput extends KeyAdapter {
 
     public void keyPressed(KeyEvent e){
         int key = e.getKeyCode();
-        for (GameObject object : this.handler.objects) {
-            if(object.getId() ==ID.Player){
-                if(key==KeyEvent.VK_LEFT) {
-                    object.setVelX(-5);
-                    keyDown[0]=true;
-                }
-                if(key==KeyEvent.VK_RIGHT){
-                    object.setVelX(5);
-                    keyDown[1]=true;
-                }
-                if(key==KeyEvent.VK_UP){
-                    object.setVelY(-5);
-                    keyDown[2]=true;
-                }
+        if(game.gameState== Game.STATE.Game){
+            for (GameObject object : this.handler.objects) {
+                if(object.getId() ==ID.Player){
+                    if(key==KeyEvent.VK_LEFT) {
+                        object.setVelX(-5);
+                        keyDown[0]=true;
+                    }
+                    if(key==KeyEvent.VK_RIGHT){
+                        object.setVelX(5);
+                        keyDown[1]=true;
+                    }
+                    if(key==KeyEvent.VK_UP){
+                        object.setVelY(-5);
+                        keyDown[2]=true;
+                    }
 
-                if(key==KeyEvent.VK_DOWN)
-                {
-                    object.setVelY(5);
-                    keyDown[3]=true;
-                }
+                    if(key==KeyEvent.VK_DOWN)
+                    {
+                        object.setVelY(5);
+                        keyDown[3]=true;
+                    }
 
+                }
+            }
+            if(key==KeyEvent.VK_P)
+            {
+                if(game.pause!=true)
+                    game.pause=true;
+                else
+                    game.pause=false;
             }
         }
+
+
+
         if(key==KeyEvent.VK_ESCAPE) System.exit(1);
 
     }

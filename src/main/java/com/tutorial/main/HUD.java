@@ -9,6 +9,7 @@ public class HUD {
 
     private int score = 0;
     private int level = 1;
+    private int difficulty;
 
     public void tick() {
         HEALTH = (int)Game.clamp(HEALTH, 0, 100);
@@ -51,5 +52,11 @@ public class HUD {
         this.level = level;
     }
 
+    public int getDifficulty() {
+        return difficulty;
+    }
 
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
 }

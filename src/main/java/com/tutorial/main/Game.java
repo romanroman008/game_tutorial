@@ -24,12 +24,14 @@ public class Game extends Canvas implements Runnable {
     private Spawn spawn;
     private Menu menu;
 
+    public boolean pause=false;
 
 
     public enum STATE{
         Menu,
         Game,
         Help,
+        Select,
         End
     }
 
@@ -40,12 +42,12 @@ public class Game extends Canvas implements Runnable {
         handler = new Handler();
         hud = new HUD();
         menu=new Menu(this,handler,hud);
-        this.addKeyListener(new KeyInput(handler));
+        this.addKeyListener(new KeyInput(handler,this));
         this.addMouseListener(menu);
 
         AudioPlayer.load();
 
-        AudioPlayer.getMusicMap("theme_song").loop();
+       // AudioPlayer.getMusicMap("theme_song").loop();
 
         new Window(WIDTH, HEIGHT, "Let's build a game", this);
 
@@ -112,16 +114,22 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-        handler.tick();
+
+
         if(gameState==STATE.Game){
-            hud.tick();
-            spawn.tick();
-            if(HUD.HEALTH==0){
-                endGame();
+            if(!pause){
+                handler.tick();
+                hud.tick();
+                spawn.tick();
+                if(HUD.HEALTH==0){
+                    endGame();
+                }
             }
 
-        }else if(gameState==STATE.Menu){
+
+        }else if(gameState==STATE.Menu||gameState==STATE.End||gameState==STATE.Help||gameState==STATE.Select){
             menu.tick();
+            handler.tick();
         }
 
     }
@@ -146,9 +154,15 @@ public class Game extends Canvas implements Runnable {
         g.fillRect(0, 0, WIDTH, HEIGHT);
         handler.render(g);
         if(gameState==STATE.Game){
-
+            if(!pause)
             hud.render(g);
-        }else if(gameState==STATE.Menu||gameState==STATE.Help||gameState==STATE.End){
+            else{
+                g.setFont(new Font("arial", 1, 30));
+                g.setColor(Color.white);
+                g.drawString("Pause",270,200);
+            }
+
+        }else if(gameState==STATE.Menu||gameState==STATE.Help||gameState==STATE.End||gameState==STATE.Select){
             menu.render(g);
         }
 
